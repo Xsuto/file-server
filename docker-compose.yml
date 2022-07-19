@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    container_name: database
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+  web:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    depends_on:
+      - api
+  api:
+    restart: always
+    build:
+      context: ./server
+    ports:
+      - "9003:9003"
+    expose:
+      - "9003"
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - uploads:/usr/src/app/uploads
+volumes:
+  mongodata:
+  uploads:
