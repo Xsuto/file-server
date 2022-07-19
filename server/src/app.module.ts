@@ -5,13 +5,22 @@ import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileSchema } from './schemas/file.schema';
-console.log(process.env);
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://database:27017/files'),
+    MongooseModule.forRoot(
+      `mongodb+srv://${encodeURIComponent(
+        process.env.DB_USER,
+      )}:${encodeURIComponent(
+        process.env.DB_PASSWORD,
+      )}@cluster0.ityqe.mongodb.net/?retryWrites=true&w=majority`,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+    ),
     MongooseModule.forFeature([{ name: 'File', schema: FileSchema }]),
     MulterModule.register({
       dest: './uploads',

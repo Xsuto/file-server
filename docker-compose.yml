@@ -1,12 +1,5 @@
 version: "3.9"
 services:
-  db:
-    image: arm64v8/mongo:4.2-bionic
-    container_name: database
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodata:/data/db
   web:
     build:
       context: ./client
@@ -24,12 +17,11 @@ services:
       - "9003:9003"
     expose:
       - "9003"
-    links:
-      - db
-    depends_on:
-      - db
     volumes:
       - uploads:/usr/src/app/uploads
+    environment:
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+
 volumes:
-  mongodata:
   uploads:
