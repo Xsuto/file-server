@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   db:
-    image: arm64v8/mongo:5-focal
+    image: arm64v8/mongo:4.2-bionic
     container_name: database
     ports:
       - "27017:27017"
