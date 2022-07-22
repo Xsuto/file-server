@@ -5,7 +5,6 @@ import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileSchema } from './schemas/file.schema';
-console.log(process.env);
 @Module({
   imports: [
     ConfigModule.forRoot({
