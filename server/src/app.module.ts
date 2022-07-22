@@ -10,17 +10,10 @@ import { FileSchema } from './schemas/file.schema';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      `mongodb+srv://${encodeURIComponent(
-        process.env.DB_USER,
-      )}:${encodeURIComponent(
-        process.env.DB_PASSWORD,
-      )}@cluster0.ityqe.mongodb.net/?retryWrites=true&w=majority`,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-    ),
+    MongooseModule.forRoot(process.env.DB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
     MongooseModule.forFeature([{ name: 'File', schema: FileSchema }]),
     MulterModule.register({
       dest: './uploads',

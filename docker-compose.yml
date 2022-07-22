@@ -20,8 +20,7 @@ services:
     volumes:
       - uploads:/usr/src/app/uploads
     environment:
-      DB_USER: $DB_USER
-      DB_PASSWORD: $DB_PASSWORD
+      DB_URI: $DB_URI
 
 volumes:
   uploads:
