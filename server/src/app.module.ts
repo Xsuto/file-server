@@ -5,18 +5,17 @@ import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileSchema } from './schemas/file.schema';
+
+console.log(process.env.DB_URI);
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      process.env.DB_URI || 'mongodb://localhost:27017/files',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-    ),
+    MongooseModule.forRoot(process.env.DB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
     MongooseModule.forFeature([{ name: 'File', schema: FileSchema }]),
     MulterModule.register({
       dest: './uploads',

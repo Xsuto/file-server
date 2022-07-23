@@ -19,12 +19,13 @@ export class AppController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Res() res) {
-    const { ID, originalName, createdAt } =
+    const { ID, originalName, createdAt, extension } =
       await this.appService.handleFileUpload(file);
     res.send({
       ID,
       originalName,
       createdAt,
+      extension,
     });
   }
 
@@ -35,14 +36,28 @@ export class AppController {
     stream.pipe(res);
   }
 
+  @Get('yt/:url')
+  async getYoutubeFilm(@Param('url') url: string, @Res() res) {
+    const decodedUrl = decodeURIComponent(url);
+    const { ID, originalName, createdAt, extension } =
+      await this.appService.getYoutubeFilm(decodedUrl);
+    res.send({
+      ID,
+      originalName,
+      createdAt,
+      extension,
+    });
+  }
+
   @Get('files')
   async getAllFiles() {
     const files = await this.appService.getAllFiles();
-    return files.map(({ ID, originalName, createdAt }) => {
+    return files.map(({ ID, originalName, createdAt, extension }) => {
       return {
         ID,
         originalName,
         createdAt,
+        extension,
       };
     });
   }

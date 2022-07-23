@@ -13,6 +13,9 @@ export class File {
 
   @Prop({ required: true, default: Date.now })
   createdAt: Date;
+
+  @Prop({ required: false })
+  extension: string;
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);
