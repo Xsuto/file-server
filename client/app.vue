@@ -29,7 +29,11 @@ const formattedServerFiles = $computed(() =>
 
 const uploadYoutubeVideo = async () => {
   const url = ytURL + encodeURIComponent(youtubeLink);
-  await useFetch(url);
+  try {
+    await useFetch(url);
+  } catch (e) {
+    if (e instanceof Error) console.log(e.message);
+  }
   await refresh();
 };
 

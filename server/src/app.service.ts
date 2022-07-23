@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { File, FileDocument } from './schemas/file.schema';
+import { FileDocument } from './schemas/file.schema';
 import * as ytdl from 'ytdl-core';
 import { createWriteStream } from 'fs';
-import { v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AppService {
@@ -16,7 +16,7 @@ export class AppService {
     ID: string,
     originalName: string,
     extension?: string,
-  ): Promise<File> {
+  ): Promise<FileDocument> {
     const newFile = new this.filesDatabase({
       ID,
       originalName,
@@ -25,27 +25,25 @@ export class AppService {
     return newFile.save();
   }
 
-  async handleFileUpload(file: Express.Multer.File): Promise<File> {
+  async handleFileUpload(file: Express.Multer.File): Promise<FileDocument> {
     return this.saveFile(file.filename, file.originalname);
   }
 
-  async getFile(id: string): Promise<File> {
+  async getFile(id: string): Promise<FileDocument> {
     return this.filesDatabase.findOne({
       ID: id,
     });
   }
 
-  async getAllFiles(): Promise<File[]> {
+  async getAllFiles(): Promise<FileDocument[]> {
     return this.filesDatabase.find().exec();
   }
 
-  async getYoutubeFilm(url: string): Promise<File> {
-    console.log('url ', url);
+  async getYoutubeFilm(url: string): Promise<FileDocument> {
     const info = await ytdl.getInfo(url);
     const name = info.videoDetails.title;
-    const id = v4().replace(/-/g, '');
+    const id = uuid().replace(/-/g, '');
     console.log(name, id);
-
     const video = await ytdl(url);
     const videoStream = createWriteStream(`./uploads/${id}`);
     const stream = video.pipe(videoStream);

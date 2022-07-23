@@ -1,0 +1,5 @@
+### Yt files
+GET http://localhost:9003/yt/https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DQMBeNafX1ss
+
+### get all files
+GET http://localhost:9003/files

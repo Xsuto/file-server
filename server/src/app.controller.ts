@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Res,
@@ -11,6 +13,7 @@ import { AppService } from './app.service';
 import { Express } from 'express';
 import { createReadStream } from 'fs';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterface } from './schemas/file.schema';
 
 @Controller()
 export class AppController {
@@ -18,15 +21,12 @@ export class AppController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Res() res) {
-    const { ID, originalName, createdAt, extension } =
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<FileInterface> {
+    const { ID, originalName, extension, createdAt } =
       await this.appService.handleFileUpload(file);
-    res.send({
-      ID,
-      originalName,
-      createdAt,
-      extension,
-    });
+    return { ID, originalName, extension, createdAt };
   }
 
   @Get('file/:id')
@@ -37,20 +37,22 @@ export class AppController {
   }
 
   @Get('yt/:url')
-  async getYoutubeFilm(@Param('url') url: string, @Res() res) {
+  async getYoutubeFilm(@Param('url') url: string): Promise<FileInterface> {
     const decodedUrl = decodeURIComponent(url);
-    const { ID, originalName, createdAt, extension } =
-      await this.appService.getYoutubeFilm(decodedUrl);
-    res.send({
-      ID,
-      originalName,
-      createdAt,
-      extension,
-    });
+    try {
+      const { ID, originalName, extension, createdAt } =
+        await this.appService.getYoutubeFilm(decodedUrl);
+      return { ID, originalName, extension, createdAt };
+    } catch (err) {
+      throw new HttpException(
+        "Internal error couldn't download film",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get('files')
-  async getAllFiles() {
+  async getAllFiles(): Promise<FileInterface[]> {
     const files = await this.appService.getAllFiles();
     return files.map(({ ID, originalName, createdAt, extension }) => {
       return {

@@ -18,4 +18,6 @@ export class File {
   extension: string;
 }
 
+export type FileInterface = File;
+
 export const FileSchema = SchemaFactory.createForClass(File);
