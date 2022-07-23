@@ -1,6 +1,0 @@
-{
-  "extends": "@antfu",
-  "rules": {
-    "space-before-blocks": "error"
-  }
-}
