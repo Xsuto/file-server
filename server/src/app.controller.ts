@@ -57,13 +57,13 @@ export class AppController {
   @Get('files')
   async getAllFiles(): Promise<FileInterface[]> {
     const files = await this.appService.getAllFiles();
-    return files.map(({ ID, originalName, createdAt, extension }) => {
-      return {
+    return files
+      .map(({ ID, originalName, createdAt, extension }) => ({
         ID,
         originalName,
         createdAt,
         extension,
-      };
-    });
+      }))
+      .reverse();
   }
 }
