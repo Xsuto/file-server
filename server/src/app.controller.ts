@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Res,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -30,10 +31,10 @@ export class AppController {
   }
 
   @Get('file/:id')
-  async getFile(@Param('id') id: string, @Res() res) {
+  async getFile(@Param('id') id: string): Promise<StreamableFile> {
     const file = await this.appService.getFile(id);
     const stream = createReadStream(`./uploads/${file.ID}`);
-    stream.pipe(res);
+    return new StreamableFile(stream);
   }
 
   @Get('yt/:url')
@@ -44,6 +45,8 @@ export class AppController {
         await this.appService.getYoutubeFilm(decodedUrl);
       return { ID, originalName, extension, createdAt };
     } catch (err) {
+      if (err instanceof Error)
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
       throw new HttpException(
         "Internal error couldn't download film",
         HttpStatus.INTERNAL_SERVER_ERROR,

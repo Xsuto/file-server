@@ -58,7 +58,10 @@ const handleInputChange = (event) => {
 };
 
 const handleClick = (file: File) => {
-  FileSaver.saveAs(fileURL + file.ID, file.originalName + file?.extension);
+  FileSaver.saveAs(
+    fileURL + file.ID,
+    file.originalName + (file?.extension || ''),
+  );
 };
 </script>
 

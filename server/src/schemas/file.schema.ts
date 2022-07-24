@@ -14,7 +14,7 @@ export class File {
   @Prop({ required: true, default: Date.now })
   createdAt: Date;
 
-  @Prop({ required: false })
+  @Prop({ required: false, default: '' })
   extension: string;
 }
 
